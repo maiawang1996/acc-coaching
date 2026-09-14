@@ -22,12 +22,12 @@
   <main class="shell">
     <div class="eyebrow">Professional coaching · personal dashboard</div>
     <div class="top"><h1>ACC 冲刺</h1><div class="date" id="today"></div></div>
-    <nav class="tabs" aria-label="记录模块"><button class="tab active" data-view="learning">Coaching 学习记录</button><button class="tab" data-view="hours">ACC 小时数记录</button><button class="tab" data-view="reflection">学习和反思记录</button></nav>
-    <section class="view active" id="learning">
+    <nav class="tabs" aria-label="记录模块"><button class="tab" data-view="learning">Coaching 学习记录</button><button class="tab active" data-view="hours">ACC 小时数记录</button><button class="tab" data-view="reflection">学习和反思记录</button></nav>
+    <section class="view" id="learning">
       <div class="hero"><div class="card overview"><div class="progress-label"><h2>课程进度</h2><strong id="course-count">6 / 24</strong></div><div class="track"><div class="fill" id="course-fill"></div></div><p class="sub" id="course-text">已完成 25% · 距离完成全部课程还差 18 节</p></div><div class="card side-stat"><div class="tiny">本阶段目标</div><b>24 节课程</b><span id="course-side">已完成 6 节，保持节奏</span></div></div>
       <div class="section-head"><h3>课程清单</h3><small>点击课程即可切换完成状态</small></div><div class="course-list" id="course-list"></div>
     </section>
-    <section class="view" id="hours">
+    <section class="view active" id="hours">
       <div class="hours-layout"><div class="card hours-card"><div class="eyebrow">ACC coaching hours</div><h2>你的总小时数</h2><div class="hours-number"><span id="hour-total"><span class="hour-number-value">3</span><span class="hour-unit">小时 0 分钟</span></span></div><p class="goal">目标 100 小时 · 还差 <span id="hour-left">97小时0分钟</span></p><div class="track"><div class="fill" id="hour-fill"></div></div><p class="sub" id="hour-percent">已完成目标的 3%</p></div>
       <form class="card form-card" id="hour-form"><h3 id="hour-form-title">新增 coaching 记录</h3><div class="form-grid"><div><label for="date">日期</label><div class="date-control"><span id="date-display"></span><input id="date" type="date" required /></div></div><div><label for="client">客户 / 学员</label><input id="client" required /></div><div class="wide"><label for="topic">会议主题 / 目标</label><input id="topic" required /></div><div class="wide"><label>时长</label><input id="duration" type="hidden" value="0.5" /><div class="duration-options" role="group" aria-label="选择时长"><button class="duration-option selected" type="button" data-duration="0.5" aria-pressed="true">30 分钟</button><button class="duration-option" type="button" data-duration="0.75" aria-pressed="false">45 分钟</button><button class="duration-option" type="button" data-duration="1" aria-pressed="false">1 小时</button><button class="duration-option" type="button" data-duration="1.25" aria-pressed="false">1 小时 15 分钟</button></div></div></div><button class="submit" id="hour-submit" type="submit">添加本次记录</button><button class="cancel-edit" id="cancel-session-edit" type="button" hidden>取消修改</button></form></div>
       <div class="card records"><div class="records-header"><h3>已记录的 coaching 会谈</h3><span class="sub" id="record-count"></span></div><div id="records"></div></div>
