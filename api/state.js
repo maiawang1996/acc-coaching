@@ -2,15 +2,21 @@ const url = process.env.SUPABASE_URL;
 const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
 const headers = { apikey: key, Authorization: `Bearer ${key}`, "Content-Type": "application/json" };
+const getRows = async path => {
+  const response = await fetch(`${url}/rest/v1/${path}`, { headers });
+  const body = await response.json();
+  if (!response.ok || !Array.isArray(body)) throw new Error(JSON.stringify(body));
+  return body;
+};
 
 export default async function handler(req, res) {
   if (!url || !key) return res.status(500).json({ error: "Database is not configured" });
   try {
     if (req.method === "GET") {
       const [completedState, reflectionsState, hours] = await Promise.all([
-        fetch(`${url}/rest/v1/app_state?key=eq.completed_courses&select=key,value`, { headers }).then(r => r.json()),
-        fetch(`${url}/rest/v1/app_state?key=eq.reflections&select=key,value`, { headers }).then(r => r.json()),
-        fetch(`${url}/rest/v1/coaching_sessions?select=id,session_date,client,topic,duration&order=session_date.desc`, { headers }).then(r => r.json()),
+        getRows('app_state?key=eq.completed_courses&select=key,value'),
+        getRows('app_state?key=eq.reflections&select=key,value'),
+        getRows('coaching_sessions?select=id,session_date,client,topic,duration&order=session_date.desc'),
       ]);
       const state = [...completedState, ...reflectionsState];
       const values = Object.fromEntries(state.map(row => [row.key, row.value]));
