@@ -3,7 +3,7 @@
   "short_name": "ACC 冲刺",
   "start_url": "/",
   "display": "standalone",
-  "background_color": "#0d141d",
-  "theme_color": "#0d141d",
-  "icons": [{ "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any maskable" }]
+  "background_color": "#164f95",
+  "theme_color": "#164f95",
+  "icons": [{ "src": "/icon.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }]
 }
