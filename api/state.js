@@ -7,10 +7,12 @@ export default async function handler(req, res) {
   if (!url || !key) return res.status(500).json({ error: "Database is not configured" });
   try {
     if (req.method === "GET") {
-      const [state, hours] = await Promise.all([
-        fetch(`${url}/rest/v1/app_state?key=in.(completed_courses,reflections)&select=key,value`, { headers }).then(r => r.json()),
+      const [completedState, reflectionsState, hours] = await Promise.all([
+        fetch(`${url}/rest/v1/app_state?key=eq.completed_courses&select=key,value`, { headers }).then(r => r.json()),
+        fetch(`${url}/rest/v1/app_state?key=eq.reflections&select=key,value`, { headers }).then(r => r.json()),
         fetch(`${url}/rest/v1/coaching_sessions?select=id,session_date,client,topic,duration&order=session_date.desc`, { headers }).then(r => r.json()),
       ]);
+      const state = [...completedState, ...reflectionsState];
       const values = Object.fromEntries(state.map(row => [row.key, row.value]));
       return res.status(200).json({ completed: values.completed_courses ?? [0,1,2,3,4,5], reflections: values.reflections ?? [], hours });
     }
