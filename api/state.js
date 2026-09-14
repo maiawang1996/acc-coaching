@@ -34,6 +34,17 @@ export default async function handler(req, res) {
       return res.status(201).json((await response.json())[0]);
     }
 
+    if (req.method === "POST" && req.body?.type === "session-update") {
+      const { id, session_date, client, topic, duration } = req.body;
+      const response = await fetch(`${url}/rest/v1/coaching_sessions?id=eq.${id}`, {
+        method: "PATCH",
+        headers: { ...headers, Prefer: "return=representation" },
+        body: JSON.stringify({ session_date, client, topic, duration }),
+      });
+      if (!response.ok) throw new Error(await response.text());
+      return res.status(200).json((await response.json())[0]);
+    }
+
     if (req.method === "POST" && req.body?.type === "state") {
       const response = await fetch(`${url}/rest/v1/app_state?on_conflict=key`, {
         method: "POST",
