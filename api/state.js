@@ -45,6 +45,17 @@ export default async function handler(req, res) {
       return res.status(200).json((await response.json())[0]);
     }
 
+    if (req.method === "POST" && req.body?.type === "session-delete") {
+      const id = Number(req.body.id);
+      if (!Number.isInteger(id) || id < 1) return res.status(400).json({ error: "Invalid session id" });
+      const response = await fetch(`${url}/rest/v1/coaching_sessions?id=eq.${id}`, {
+        method: "DELETE",
+        headers: { ...headers, Prefer: "return=minimal" },
+      });
+      if (!response.ok) throw new Error(await response.text());
+      return res.status(204).end();
+    }
+
     if (req.method === "POST" && req.body?.type === "state") {
       const response = await fetch(`${url}/rest/v1/app_state?on_conflict=key`, {
         method: "POST",
