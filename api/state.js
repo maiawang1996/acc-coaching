@@ -16,7 +16,7 @@ export default async function handler(req, res) {
       const [completedState, reflectionsState, hours] = await Promise.all([
         getRows('app_state?key=eq.completed_courses&select=key,value'),
         getRows('app_state?key=eq.reflections&select=key,value'),
-        getRows('coaching_sessions?select=id,session_date,client,topic,duration,client_type,is_paid&order=session_date.desc'),
+        getRows('coaching_sessions?select=id,session_date,client,topic,duration,client_type,is_paid,price&order=session_date.desc'),
       ]);
       const state = [...completedState, ...reflectionsState];
       const values = Object.fromEntries(state.map(row => [row.key, row.value]));
@@ -24,22 +24,22 @@ export default async function handler(req, res) {
     }
 
     if (req.method === "POST" && req.body?.type === "session") {
-      const { session_date, client, topic, duration, client_type, is_paid } = req.body;
+      const { session_date, client, topic, duration, client_type, is_paid, price } = req.body;
       const response = await fetch(`${url}/rest/v1/coaching_sessions`, {
         method: "POST",
         headers: { ...headers, Prefer: "return=representation" },
-        body: JSON.stringify({ session_date, client, topic, duration, client_type, is_paid: Boolean(is_paid) }),
+        body: JSON.stringify({ session_date, client, topic, duration, client_type, is_paid: Boolean(is_paid), price: Boolean(is_paid) ? Number(price) || 0 : 0 }),
       });
       if (!response.ok) throw new Error(await response.text());
       return res.status(201).json((await response.json())[0]);
     }
 
     if (req.method === "POST" && req.body?.type === "session-update") {
-      const { id, session_date, client, topic, duration, client_type, is_paid } = req.body;
+      const { id, session_date, client, topic, duration, client_type, is_paid, price } = req.body;
       const response = await fetch(`${url}/rest/v1/coaching_sessions?id=eq.${id}`, {
         method: "PATCH",
         headers: { ...headers, Prefer: "return=representation" },
-        body: JSON.stringify({ session_date, client, topic, duration, client_type, is_paid: Boolean(is_paid) }),
+        body: JSON.stringify({ session_date, client, topic, duration, client_type, is_paid: Boolean(is_paid), price: Boolean(is_paid) ? Number(price) || 0 : 0 }),
       });
       if (!response.ok) throw new Error(await response.text());
       return res.status(200).json((await response.json())[0]);
