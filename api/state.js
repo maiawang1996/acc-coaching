@@ -16,30 +16,38 @@ export default async function handler(req, res) {
       const [completedState, reflectionsState, hours] = await Promise.all([
         getRows('app_state?key=eq.completed_courses&select=key,value'),
         getRows('app_state?key=eq.reflections&select=key,value'),
-        getRows('coaching_sessions?select=id,session_date,client,topic,duration,client_type,is_paid,price&order=session_date.desc'),
+        getRows('coaching_sessions?select=id,session_date,client,topic,duration,client_type,is_paid,price,rating&order=session_date.desc'),
       ]);
       const state = [...completedState, ...reflectionsState];
       const values = Object.fromEntries(state.map(row => [row.key, row.value]));
       return res.status(200).json({ completed: values.completed_courses ?? [0,1,2,3,4,5], reflections: values.reflections ?? [], hours });
     }
 
+    if (req.method === "POST" && ["session", "session-update"].includes(req.body?.type)) {
+      const rating = req.body.rating;
+      if (rating !== undefined && (!Number.isInteger(rating) || rating < 0 || rating > 5)) {
+        return res.status(400).json({ error: "Rating must be an integer from 0 to 5" });
+      }
+    }
+
     if (req.method === "POST" && req.body?.type === "session") {
-      const { session_date, client, topic, duration, client_type, is_paid, price } = req.body;
+      const { session_date, client, topic, duration, client_type, is_paid, price, rating = 0 } = req.body;
       const response = await fetch(`${url}/rest/v1/coaching_sessions`, {
         method: "POST",
         headers: { ...headers, Prefer: "return=representation" },
-        body: JSON.stringify({ session_date, client, topic, duration, client_type, is_paid: Boolean(is_paid), price: Boolean(is_paid) ? Number(price) || 0 : 0 }),
+        body: JSON.stringify({ session_date, client, topic, duration, client_type, is_paid: Boolean(is_paid), price: Boolean(is_paid) ? Number(price) || 0 : 0, rating }),
       });
       if (!response.ok) throw new Error(await response.text());
       return res.status(201).json((await response.json())[0]);
     }
 
     if (req.method === "POST" && req.body?.type === "session-update") {
-      const { id, session_date, client, topic, duration, client_type, is_paid, price } = req.body;
+      const { id, session_date, client, topic, duration, client_type, is_paid, price, rating } = req.body;
       const response = await fetch(`${url}/rest/v1/coaching_sessions?id=eq.${id}`, {
         method: "PATCH",
         headers: { ...headers, Prefer: "return=representation" },
-        body: JSON.stringify({ session_date, client, topic, duration, client_type, is_paid: Boolean(is_paid), price: Boolean(is_paid) ? Number(price) || 0 : 0 }),
+        // Omit an absent rating so an older open client cannot clear a saved score.
+        body: JSON.stringify({ session_date, client, topic, duration, client_type, is_paid: Boolean(is_paid), price: Boolean(is_paid) ? Number(price) || 0 : 0, ...(rating === undefined ? {} : { rating }) }),
       });
       if (!response.ok) throw new Error(await response.text());
       return res.status(200).json((await response.json())[0]);
