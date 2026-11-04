@@ -1,0 +1,15 @@
+#coach-self{max-width:720px;margin-inline:auto}
+.coach-intro{margin:0 0 20px}.coach-intro h2{font-size:25px;margin:0 0 8px;letter-spacing:-.04em}.coach-intro p{font-size:14px;color:var(--muted);margin:0;line-height:1.65}
+.coach-switch{display:grid;grid-template-columns:1fr 1.25fr;gap:4px;padding:4px;background:#101a26;border:1px solid var(--line);border-radius:10px;margin-bottom:20px}
+.coach-switch button{min-width:0;min-height:44px;border:0;border-radius:7px;background:transparent;color:var(--muted);font-size:13px;font-weight:650;white-space:nowrap;padding:8px 3px}
+.coach-switch button[aria-pressed=true]{background:#e4eefb;color:#101b27}
+.coach-composer{padding:20px}.coach-form-head{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:16px}.coach-form-head h3{font-size:16px;line-height:1.5;margin:0}.coach-form-date{font-size:12px;color:var(--muted);white-space:nowrap}
+.coach-prompt-label{font-size:12px;color:var(--muted);margin-bottom:9px}.coach-prompts{display:flex;gap:7px;margin-bottom:12px}.coach-prompt{flex:1;min-width:0;min-height:44px;font-size:12px;padding:7px 9px;border:1px solid #2b3b4e;background:transparent;color:var(--muted);border-radius:7px;line-height:1.5;text-align:left}
+.coach-prompt[aria-pressed=true]{border-color:#34485e;background:#192a3c;color:#b9d3f5}.coach-cue{display:block;font-size:14px;line-height:1.65;margin:0 0 10px;color:#c7daef}
+#coach-content{display:block;min-height:132px;resize:vertical;font-family:inherit;font-size:17px;line-height:1.75;padding:13px;overflow-wrap:anywhere}#coach-content::placeholder{color:#8293a8}
+.coach-submit{margin-top:13px;min-height:44px;font-size:15px}.coach-history-head{display:flex;align-items:center;justify-content:space-between;margin:26px 1px 12px;gap:12px}.coach-history-head h3{font-size:15px;margin:0}.coach-history-head span{font-size:12px;color:var(--muted)}
+.coach-entry{padding:19px;margin-bottom:12px}.coach-entry-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:9px}.coach-entry-date{font-size:12px;color:#9dc1ee}.coach-entry-content{font-size:16px;line-height:1.8;color:#dce8f7;white-space:pre-wrap;overflow-wrap:anywhere;margin:0}
+.coach-entry-edit{display:grid;place-items:center;width:44px;height:44px;margin:-10px -10px -10px 0;padding:0;border:0;border-radius:8px;background:transparent;color:#9bb7d9}.coach-entry-edit svg{width:16px;height:16px}
+.coach-notice{font-size:13px;line-height:1.6;color:#ffcf88;margin:12px 0 0}.coach-entry-pending{font-size:11px;color:#ffcf88;margin-left:8px}.coach-empty{font-size:14px;line-height:1.8;padding:24px 16px;color:var(--muted);text-align:center}
+#coach-self button:focus-visible{outline:2px solid #78b0ff;outline-offset:2px}
+@media(max-width:360px){.coach-composer{padding:16px}.coach-form-head{align-items:flex-start}.coach-form-head h3{font-size:15px}.coach-switch button{font-size:12px}}
