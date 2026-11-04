@@ -27,15 +27,16 @@ test('coaching journal: independent records, retries, edits, validation and pagi
       assert.equal((await invoke(handler, 'POST', { ...first, ...change })).code, 400);
       assert.equal(fixture.calls.length, before);
     }
-    assert.equal((await invoke(handler, 'DELETE', { id: '*' })).code, 400);
-    assert.equal((await invoke(handler, 'DELETE', { id: first.id })).code, 204);
-    assert.equal((await invoke(handler, 'GET')).data.entries.length, 1);
+    const beforeUnsupported = fixture.calls.length;
+    assert.equal((await invoke(handler, 'DELETE', { id: first.id })).code, 405);
+    assert.equal(fixture.calls.length, beforeUnsupported, 'unsupported methods cannot mutate records');
+    assert.equal((await invoke(handler, 'GET')).data.entries.length, 2);
     assert(fixture.rows.has('reflections'));
     for (let i = 0; i < 503; i++) {
       const id = `00000000-0000-4000-8000-${String(i).padStart(12, '0')}`;
       fixture.rows.set(`coach-journal.${id}`, { key: `coach-journal.${id}`, value: { ...first, id }, updated_at: '2026-11-04T00:00:00Z' });
     }
-    assert.equal((await invoke(handler, 'GET')).data.entries.length, 504, 'read all pages');
+    assert.equal((await invoke(handler, 'GET')).data.entries.length, 505, 'read all pages');
     fixture.offline = true;
     assert.equal((await invoke(handler, 'POST', first)).code, 502);
     assert.equal((await invoke(handler, 'GET')).code, 502);

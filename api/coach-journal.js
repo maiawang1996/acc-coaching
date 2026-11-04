@@ -52,15 +52,7 @@ export default async function handler(req, res) {
       if (!rows?.[0]?.value) throw new Error('Database did not return the saved entry');
       return res.status(200).json({ ...rows[0].value, updatedAt: rows[0].updated_at });
     }
-    if (req.method === 'DELETE') {
-      const id = req.body?.id;
-      if (typeof id !== 'string' || !UUID.test(id)) return res.status(400).json({ error: 'Invalid entry id' });
-      await request(`app_state?key=eq.${PREFIX}${id.toLowerCase()}`, {
-        method: 'DELETE', headers: { Prefer: 'return=minimal' },
-      });
-      return res.status(204).end();
-    }
-    res.setHeader('Allow', 'GET, POST, DELETE');
+    res.setHeader('Allow', 'GET, POST');
     return res.status(405).json({ error: 'Method not allowed' });
   } catch (error) {
     return res.status(502).json({ error: 'Coaching journal database request failed' });
