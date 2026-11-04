@@ -8,7 +8,7 @@ create table public.coaching_sessions (
   id bigint generated always as identity primary key,
   session_date date not null,
   client text not null,
-  client_type text not null default '新客户' check (client_type in ('新客户', '复访客户')),
+  client_type text not null default '新客户' check (client_type in ('新客户', '复访客户', '互co')),
   is_paid boolean not null default false,
   price numeric(10,2) not null default 0 check (price >= 0),
   rating smallint not null default 0 check (rating between 0 and 5),
